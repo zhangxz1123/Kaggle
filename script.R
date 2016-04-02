@@ -6,7 +6,6 @@ train_data = train[,2:(length(train)-1)]
 test_data = test[,2:length(test)]
 
 train_data_nozero=removeColsAllZeros(train_data)
-test_data_nonzero=removeColsAllZeros(test_data)
 
 #run pca
 model_pca = prcomp(train_data_nozero,center = T, scale.=T)
@@ -20,6 +19,7 @@ glm.out = glm(target~., family=binomial(logit), data=train_75)
 summary(glm.out)
 
 # project the new data onto PCA space
+m = as.matrix(train_data)
 zeros = which(colSums(abs(m),na.rm = TRUE) == 0)
 test_data2 = test_data[,-zeros]
 proj = scale(test_data2, model_pca$center, model_pca$scale) %*% model_pca$rotation
